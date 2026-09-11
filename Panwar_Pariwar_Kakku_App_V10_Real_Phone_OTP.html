@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#21170f">
+<title>Panwar Pariwar Kakku</title>
+<style>
+:root{--brown:#21170f;--brown2:#3b2818;--gold:#c99638;--gold2:#f0cb73;--cream:#f8f0e2;--card:#fffaf1;--line:#eadcc5;--text:#2b2118;--muted:#756b60}
+*{box-sizing:border-box}body{margin:0;background:#17110d;color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}.app{max-width:430px;min-height:100vh;margin:auto;background:var(--cream)}
+.screen{display:none;min-height:100vh;padding-bottom:86px}.screen.active{display:block}.top{padding:22px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,240,226,.96);position:sticky;top:0;z-index:4;border-bottom:1px solid var(--line)}.top h2{font-family:Georgia,serif;margin:0;font-size:20px}.back{border:0;background:none;font-size:25px}.hero{background:linear-gradient(145deg,#120e0b,#3d2917 58%,#a87324);color:#fff;padding:46px 24px 30px;border-radius:0 0 30px 30px}.logo{width:78px;height:78px;border:2px solid var(--gold2);border-radius:50%;display:grid;place-items:center;font:800 40px Georgia;color:var(--gold2);margin-bottom:18px}h1,h2{font-family:Georgia,serif}h1{font-size:29px;margin:0 0 9px}h2{margin:0 0 8px}.muted{color:var(--muted)}.white-muted{color:#ddd1c0}.btn{border:0;border-radius:28px;padding:14px 20px;background:linear-gradient(90deg,#d3a044,#f1cf7c);font-weight:800;color:#24180d;font-size:16px;width:100%;margin-top:16px}.btn.dark{background:var(--brown);color:#fff}.pad{padding:20px}.quote{background:#eee0c8;border-radius:18px;padding:17px;margin:14px 0;font:17px Georgia,serif}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card,.item{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:0 5px 16px rgba(50,30,10,.05)}.card{cursor:pointer}.icon{font-size:28px;margin-bottom:8px}.card b{display:block}.small{font-size:13px;color:var(--muted)}.member{display:flex;align-items:center;gap:12px;margin:10px 0;padding:13px;background:var(--card);border:1px solid var(--line);border-radius:16px}.avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(145deg,#c99638,#f1cf7c);display:grid;place-items:center;font-weight:800}.tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#eee0c8;font-size:12px;color:#765017}.event-date{font-weight:800;color:#8a5a12}.service{margin:10px 0}.service b{font-size:16px}.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.photo{height:120px;border-radius:16px;background:linear-gradient(145deg,#3b2818,#d4ae61);display:grid;place-items:center;color:white;font-size:30px}.form input{width:100%;padding:14px;margin:7px 0;border:1px solid var(--line);border-radius:13px;background:#fff}.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:430px;width:100%;display:flex;background:#21170f;color:#fff;padding:9px 4px;justify-content:space-around;border-radius:22px 22px 0 0;z-index:10}.nav button{background:none;border:0;color:#d8cbb8;font-size:11px}.nav button span{display:block;font-size:21px;margin-bottom:2px}.notice{background:#2d241b;color:#f4dfb4;padding:14px 16px;border-radius:16px;margin:14px 0}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.section-title{margin:18px 0 10px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section id="welcome" class="screen active">
+ <div class="hero" style="min-height:100vh;border-radius:0;display:flex;flex-direction:column;justify-content:center">
+  <div class="logo">P</div><h1>Panwar Pariwar<br>Kakku</h1>
+  <p class="white-muted">एक परिवार • एक पहचान • एक साथ</p><div style="height:100px"></div>
+  <h2>रिश्तों से मजबूत<br>हमारा परिवार, हमारी शक्ति</h2>
+  <button class="btn" onclick="show('login')">शुरू करें →</button>
+ </div>
+</section>
+
+<section id="login" class="screen">
+ <div class="top"><button class="back" onclick="show('welcome')">←</button><h2>सदस्य प्रवेश</h2><span>🔐</span></div>
+ <div class="pad">
+  <h1>परिवार से जुड़ें</h1><p class="muted">मोबाइल नंबर से प्रवेश करें।</p>
+  <div class="form"><input id="phone" placeholder="मोबाइल नंबर" inputmode="numeric"><input id="name" placeholder="आपका नाम"></div>
+  <div id="recaptcha-container" style="margin:10px 0"></div>
+  <button class="btn" onclick="sendOTP()">📱 OTP भेजें</button>
+  <div id="otpArea" style="display:none;margin-top:10px">
+   <input id="otp" placeholder="6 अंकों का OTP" inputmode="numeric" maxlength="6" style="width:100%;padding:14px;margin:7px 0;border:1px solid var(--line);border-radius:13px;background:#fff">
+   <button id="verifyBtn" class="btn" onclick="verifyOTP()">✅ OTP सत्यापित करें</button>
+  </div>
+  <p id="otpStatus" class="small" style="text-align:center;margin-top:15px">Firebase Phone OTP से सुरक्षित प्रवेश।</p>
+ </div>
+</section>
+
+<section id="home" class="screen">
+ <div class="top"><h2>Panwar Pariwar Kakku</h2><span>🔔</span></div>
+ <div class="pad">
+  <h1 style="font-size:27px">नमस्कार, <span id="welcomeName">परिवार</span>! 🙏</h1>
+  <p class="muted">आपका स्वागत है, हमारे परिवार में।</p>
+  <div class="quote">“मिलकर चलेंगे, तो हर मंजिल आसान होगी।”</div>
+  <div class="grid">
+   <div class="card" onclick="show('family')"><div class="icon">👨‍👩‍👧‍👦</div><b>हमारा परिवार</b><span class="small">सदस्य सूची</span></div>
+   <div class="card" onclick="show('events')"><div class="icon">📅</div><b>कार्यक्रम</b><span class="small">आयोजन व मिलन</span></div>
+   <div class="card" onclick="show('service')"><div class="icon">🤝</div><b>समाज सेवा</b><span class="small">सहयोग व पहल</span></div>
+   <div class="card" onclick="show('gallery')"><div class="icon">📸</div><b>फोटो गैलरी</b><span class="small">यादगार पल</span></div>
+  </div>
+  <div class="section-title"><h2>आज की सूचना</h2></div>
+  <div class="notice">परिवार की महत्वपूर्ण घोषणाएँ और संदेश यहाँ दिखेंगे।</div>
+  <div class="card" onclick="show('adminLogin')"><b>⚙️ Admin / व्यवस्थापक</b><span class="small">कार्यक्रम और सदस्य जानकारी प्रबंधित करें</span></div>
+ </div>
+ <nav class="nav"><button onclick="show('home')"><span>⌂</span>होम</button><button onclick="show('events')"><span>◫</span>कार्यक्रम</button><button onclick="show('family')"><span>♟</span>परिवार</button><button onclick="show('service')"><span>♡</span>सेवा</button><button onclick="show('profile')"><span>◯</span>प्रोफाइल</button></nav>
+</section>
+
+<section id="family" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>हमारा परिवार</h2><span>👥</span></div>
+ <div class="pad"><p class="muted">परिवार के सदस्यों से जुड़ें।</p>
+  <div id="members"></div>
+  <button class="btn" onclick="show('addMember')">+ नया परिवार सदस्य जोड़ें</button>
+  <div class="item"><b>परिवार परिचय</b><p class="muted">परिवार, परंपरा और समाज से जुड़ी महत्वपूर्ण जानकारी यहाँ रखी जा सकती है।</p></div>
+ </div>
+</section>
+
+<section id="events" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>कार्यक्रम</h2><span>📅</span></div>
+ <div class="pad">
+  <div class="item"><span class="tag">आगामी कार्यक्रम</span><h2 style="margin-top:12px">परिवार मिलन समारोह</h2><p>📅 <span class="event-date">25 जनवरी 2026</span></p><p>🕙 सुबह 10:00 बजे</p><p>📍 कक्कू, राजस्थान</p><button class="btn" onclick="alert('आपकी उपस्थिति दर्ज हो गई (Demo)')">मैं शामिल होऊँगा</button></div>
+  <div class="item"><h2>नया कार्यक्रम</h2><p class="muted">Admin panel से भविष्य में कार्यक्रम जोड़े जा सकेंगे।</p></div>
+ </div>
+</section>
+
+<section id="service" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>समाज सेवा</h2><span>🤝</span></div>
+ <div class="pad"><h1 style="font-size:27px">छोटा योगदान,<br>बड़ा बदलाव</h1><p class="muted">शिक्षा, स्वास्थ्य, पर्यावरण और जरूरतमंदों की सहायता।</p>
+  <div class="item service">🎓 <b> शिक्षा सहयोग</b><p class="small">जरूरतमंद बच्चों की मदद</p></div>
+  <div class="item service">❤️ <b> स्वास्थ्य सहायता</b><p class="small">स्वस्थ समाज, मजबूत भविष्य</p></div>
+  <div class="item service">🌱 <b> पर्यावरण संरक्षण</b><p class="small">हरित कल, सुरक्षित कल</p></div>
+  <div class="item service">🤲 <b> जरूरतमंदों की मदद</b><p class="small">साथ मिलकर, एक बेहतर समाज</p></div>
+ </div>
+</section>
+
+<section id="gallery" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>फोटो गैलरी</h2><span>📸</span></div>
+ <div class="pad"><p class="muted">कार्यक्रमों और परिवार के यादगार पलों की गैलरी।</p>
+  <div class="gallery"><div class="photo">📷</div><div class="photo">📷</div><div class="photo">📷</div><div class="photo">📷</div></div>
+ </div>
+</section>
+
+<section id="profile" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>प्रोफाइल</h2><span>◯</span></div>
+ <div class="pad"><div class="item" style="text-align:center"><div class="avatar" style="margin:auto;width:70px;height:70px;font-size:25px" id="profileAvatar">P</div><h2 id="profileName">परिवार सदस्य</h2><p class="muted">Panwar Pariwar Kakku</p></div>
+  <div class="item"><b>📱 मोबाइल</b><p id="profilePhone" class="muted">अभी दर्ज नहीं</p></div>
+  <button class="btn dark" onclick="show('adminLogin')">Admin / व्यवस्थापक</button><button class="btn" onclick="show('firebaseSetup')">☁️ Firebase Status</button>
+ </div>
+</section>
+
+
+
+<section id="firebaseSetup" class="screen">
+  <div class="top"><button class="back" onclick="show('home')">←</button><h2>Firebase</h2><span>☁️</span></div>
+  <div class="pad">
+    <h1 style="font-size:27px">Online Database</h1>
+    <div class="item">
+      <b id="firebaseStatus">Firebase connection: Demo mode</b>
+      <p class="muted">जब Firebase Web configuration जोड़ी जाएगी, परिवार का डेटा ऑनलाइन sync होगा।</p>
+    </div>
+    <div class="notice">
+      <b>Collections तैयार हैं:</b><br>
+      family_members • events • announcements • services • gallery
+    </div>
+  </div>
+</section>
+
+<section id="admin" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>Admin Panel</h2><span>⚙️</span></div>
+ <div class="pad">
+  <div class="notice"><b>Online Database — Firebase V8</b><br>
+<span class="small" style="color:#eadfcf">Firebase से वास्तविक online connection और Firestore read/write test यहाँ किया जा सकता है। Phone OTP भी enabled है।</span>
+</div>
+<button class="btn" onclick="testFirebaseSync()">☁️ Firebase Sync Test चलाएँ</button>
+<div id="syncResult" class="item" style="margin-top:12px;display:none"></div>
+  <div class="grid">
+   <div class="card" onclick="show('addMember')"><div class="icon">👤</div><b>सदस्य जोड़ें</b><span class="small">नई जानकारी</span></div>
+   <div class="card" onclick="show('family')"><div class="icon">👥</div><b>सदस्य देखें</b><span class="small">पूरी सूची</span></div>
+   <div class="card" onclick="show('events')"><div class="icon">📅</div><b>कार्यक्रम</b><span class="small">आयोजन प्रबंधन</span></div>
+   <div class="card"><div class="icon">📢</div><b>घोषणाएँ</b><span class="small">जल्द जोड़ा जाएगा</span></div>
+  </div>
+  <div class="section-title"><h2>Database में क्या रहेगा?</h2></div>
+  <div class="item"><b>👤 Members</b><p class="small">नाम, फोटो, पिता/माता, गाँव/शहर, व्यवसाय, मोबाइल और परिवार संबंध।</p></div>
+  <div class="item"><b>📅 Events</b><p class="small">कार्यक्रम की तारीख, समय, स्थान, विवरण और RSVP।</p></div>
+  <div class="item"><b>📸 Gallery</b><p class="small">परिवार और कार्यक्रम की तस्वीरें।</p></div>
+  <div class="item"><b>📢 Announcements</b><p class="small">सभी सदस्यों के लिए महत्वपूर्ण सूचना।</p></div>
+ </div>
+</section>
+
+
+<section id="memberProfile" class="screen">
+ <div class="top"><button class="back" onclick="show('family')">←</button><h2>सदस्य प्रोफाइल</h2><span>👤</span></div>
+ <div class="pad">
+  <div class="item" style="text-align:center;padding:24px">
+   <div class="avatar" id="mpAvatar" style="margin:auto;width:92px;height:92px;font-size:34px">प</div>
+   <h1 id="mpName" style="font-size:28px;margin-top:14px">परिवार सदस्य</h1>
+   <span class="tag" id="mpRole">परिवार सदस्य</span>
+  </div>
+
+  <div class="section-title"><h2>व्यक्तिगत जानकारी</h2></div>
+  <div class="item"><div class="row"><b>👨 पिता का नाम</b><span>›</span></div><p id="mpFather" class="muted">जानकारी उपलब्ध नहीं</p></div>
+  <div class="item"><div class="row"><b>📍 गाँव / शहर</b><span>›</span></div><p id="mpCity" class="muted">जानकारी उपलब्ध नहीं</p></div>
+  <div class="item"><div class="row"><b>💼 व्यवसाय</b><span>›</span></div><p id="mpWork" class="muted">जानकारी उपलब्ध नहीं</p></div>
+
+  <div class="section-title"><h2>संपर्क</h2></div>
+  <div class="item"><div class="row"><b>📱 मोबाइल नंबर</b><span>›</span></div><p id="mpPhone" class="muted">जानकारी उपलब्ध नहीं</p></div>
+
+  <div class="section-title"><h2>परिवार</h2></div>
+  <div class="item"><p class="muted">इस सदस्य से जुड़े परिवार के अन्य सदस्यों की सूची यहाँ दिखाई जाएगी।</p></div>
+
+  <button class="btn" onclick="alert('Edit सुविधा Online Database जोड़ने के बाद सक्रिय होगी।')">✏️ प्रोफाइल Edit करें</button>
+ </div>
+</section>
+
+<section id="addMember" class="screen">
+ <div class="top"><button class="back" onclick="show('family')">←</button><h2>नया सदस्य</h2><span>➕</span></div>
+ <div class="pad">
+  <h1 style="font-size:27px">परिवार में जोड़ें</h1>
+  <p class="muted">सदस्य की जानकारी Firebase में online सेव की जाएगी, ताकि दूसरे मोबाइलों में भी दिखाई दे।</p>
+  <div class="form">
+   <input id="newName" placeholder="पूरा नाम">
+   <input id="newRole" placeholder="भूमिका जैसे परिवार सदस्य">
+   <input id="newFather" placeholder="पिता का नाम">
+   <input id="newCity" placeholder="गाँव / शहर">
+   <input id="newWork" placeholder="व्यवसाय">
+   <input id="newPhone" placeholder="मोबाइल नंबर" inputmode="numeric">
+  </div>
+  <button class="btn" onclick="saveMember()">सदस्य सेव करें</button>
+ </div>
+</section>
+
+<section id="adminLogin" class="screen">
+ <div class="top"><button class="back" onclick="show('home')">←</button><h2>Admin Login</h2><span>🔐</span></div>
+ <div class="pad">
+  <h1 style="font-size:27px">व्यवस्थापक प्रवेश</h1>
+  <p class="muted">सिर्फ अधिकृत व्यक्ति ऐप की जानकारी बदल सकेगा।</p>
+  <div class="form">
+   <input id="adminMobile" placeholder="Admin मोबाइल नंबर" inputmode="numeric">
+   <input id="adminPin" placeholder="PIN" type="password" inputmode="numeric">
+  </div>
+  <button class="btn" onclick="adminLogin()">Admin Panel खोलें</button>
+  <p class="small" style="text-align:center;margin-top:14px">Demo PIN: 1234</p>
+ </div>
+</section>
+</div>
+
+<script type="module">
+/*
+  PANWAR PARIWAR KAKKU — Firebase + Phone OTP
+  IMPORTANT: Paste the complete Firebase Web config from Firebase Console
+  into FIREBASE_CONFIG below. The project ID is already filled in.
+*/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc, setDoc,
+  serverTimestamp, query, orderBy, limit
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+import {
+  getAuth, RecaptchaVerifier, signInWithPhoneNumber
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBVRpq7_wVtz85ea7mgFu56Z-yKqqsDsJBo",
+  authDomain: "panwar-pariwar-kakku.firebaseapp.com",
+  projectId: "panwar-pariwar-kakku",
+  storageBucket: "panwar-pariwar-kakku.firebasestorage.app",
+  messagingSenderId: "16125122378",
+  appId: "1:16125122378:web:2bffea009161b92f3e53b3",
+  measurementId: "G-169E8YDT9R"
+};
+
+let firebaseDB = null;
+let firebaseAuth = null;
+let firebaseReady = false;
+let confirmationResult = null;
+
+try {
+  if (!FIREBASE_CONFIG.apiKey.includes("PASTE_")) {
+    const app = initializeApp(FIREBASE_CONFIG);
+    firebaseDB = getFirestore(app);
+    firebaseAuth = getAuth(app);
+    window.firebaseAuth = firebaseAuth;
+    firebaseReady = true;
+    window.firebaseDB = firebaseDB;
+    window.firebaseReady = true;
+    const el = document.getElementById("firebaseStatus");
+    if (el) el.textContent = "Firebase connection: Connected ✅";
+  }
+} catch (e) {
+  console.warn("Firebase is not connected yet:", e);
+}
+
+window.sendOTP = async function() {
+  const raw = (document.getElementById("phone").value || "").replace(/\D/g, "");
+  const name = (document.getElementById("name").value || "").trim();
+  const status = document.getElementById("otpStatus");
+  if (raw.length !== 10) { alert("कृपया 10 अंकों का मोबाइल नंबर दर्ज करें।"); return; }
+  if (!firebaseAuth) { alert("Firebase Authentication अभी तैयार नहीं है।"); return; }
+  const phoneNumber = "+91" + raw;
+  try {
+    status.textContent = "⏳ OTP भेजा जा रहा है...";
+    if (window.recaptchaVerifier) { try { window.recaptchaVerifier.clear(); } catch(e) {} }
+    window.recaptchaVerifier = new RecaptchaVerifier(firebaseAuth, "recaptcha-container", {
+      size: "normal",
+      callback: function() {}
+    });
+    confirmationResult = await signInWithPhoneNumber(firebaseAuth, phoneNumber, window.recaptchaVerifier);
+    window.confirmationResult = confirmationResult;
+    document.getElementById("otpArea").style.display = "block";
+    status.textContent = "✅ OTP भेज दिया गया है। SMS में आया OTP दर्ज करें।";
+    if (name) localStorage.setItem("ppk_name", name);
+  } catch (e) {
+    console.error(e);
+    status.textContent = "❌ OTP नहीं भेजा गया।";
+    alert("OTP भेजने में समस्या: " + (e.message || e));
+    try { if (window.recaptchaVerifier) window.recaptchaVerifier.clear(); } catch(err) {}
+    window.recaptchaVerifier = null;
+  }
+};
+
+window.verifyOTP = async function() {
+  const code = (document.getElementById("otp").value || "").trim();
+  const status = document.getElementById("otpStatus");
+  if (!confirmationResult) { alert("पहले OTP भेजें।"); return; }
+  if (!/^\d{6}$/.test(code)) { alert("कृपया 6 अंकों का OTP दर्ज करें।"); return; }
+  try {
+    status.textContent = "⏳ OTP सत्यापित किया जा रहा है...";
+    const result = await confirmationResult.confirm(code);
+    const user = result.user;
+    const name = (localStorage.getItem("ppk_name") || document.getElementById("name").value || "परिवार सदस्य").trim();
+    document.getElementById("welcomeName").textContent = name;
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profilePhone").textContent = user.phoneNumber || ("+91" + document.getElementById("phone").value.replace(/\D/g, ""));
+    document.getElementById("profileAvatar").textContent = name.charAt(0);
+    status.textContent = "✅ OTP सत्यापित!";
+    show("home");
+  } catch (e) {
+    console.error(e);
+    status.textContent = "❌ OTP गलत या expired है।";
+    alert("OTP सत्यापन में समस्या: " + (e.message || e));
+  }
+};
+
+window.testFirebaseSync = async function() {
+  const box = document.getElementById("syncResult");
+  if (!box) return;
+  box.style.display = "block";
+  box.innerHTML = "⏳ Firebase में test data भेजा जा रहा है...";
+  try {
+    if (!firebaseReady) throw new Error("Firebase initialize नहीं हुआ।");
+    const ref = await addDoc(collection(firebaseDB, "app_tests"), {
+      type: "connection_test",
+      message: "Panwar Pariwar Kakku online sync test",
+      createdAt: serverTimestamp()
+    });
+    const snap = await getDocs(query(collection(firebaseDB, "app_tests"), orderBy("createdAt", "desc"), limit(1)));
+    box.innerHTML = "✅ Firebase Read/Write सफल!<br><span class='small'>Test document: " + ref.id + "<br>Firestore अब app से बात कर रहा है।</span>";
+  } catch (e) {
+    console.error(e);
+    box.innerHTML = "❌ Firebase test अभी सफल नहीं हुआ।<br><span class='small'>" + (e.message || e) + "</span>";
+  }
+};
+
+window.saveMemberToFirebase = async function(member) {
+  if (!firebaseReady) return false;
+  await addDoc(collection(firebaseDB, "family_members"), {
+    name: member.n || "",
+    relation: member.r || "परिवार सदस्य",
+    father: member.father || "",
+    village: member.city || "",
+    profession: member.work || "",
+    phone: member.phone || "",
+    createdAt: serverTimestamp()
+  });
+  return true;
+};
+
+window.loadMembersFromFirebase = async function() {
+  if (!firebaseReady) return null;
+  const snap = await getDocs(collection(firebaseDB, "family_members"));
+  return snap.docs.map(d => ({id:d.id, ...d.data()}));
+};
+</script>
+
+<script>
+let members=[
+ {n:"परिवार सदस्य 1",r:"मुख्य सदस्य",father:"उदाहरण नाम",city:"कक्कू",work:"व्यवसाय",phone:""},
+ {n:"परिवार सदस्य 2",r:"परिवार सदस्य",father:"उदाहरण नाम",city:"कक्कू",work:"सेवा",phone:""},
+ {n:"परिवार सदस्य 3",r:"परिवार सदस्य",father:"उदाहरण नाम",city:"कक्कू",work:"कृषि",phone:""}
+];
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='family'){renderMembers();loadOnlineMembers();}}
+function adminLogin(){
+ const pin=document.getElementById('adminPin').value.trim();
+ if(pin!=='1234'){alert('Demo में सही PIN 1234 है।');return}
+ show('admin');
+}
+function login(){
+  return window.sendOTP();
+}
+function renderMembers(){
+ document.getElementById('members').innerHTML=members.map((m,i)=>`<div class="member" onclick="openMember(${i})"><div class="avatar">${m.n.charAt(0)}</div><div><b>${m.n}</b><div class="small">${m.r}</div></div><div style="margin-left:auto">›</div></div>`).join('')
+}
+function openMember(i){
+ const m=members[i];
+ document.getElementById('mpAvatar').textContent=m.n.charAt(0);
+ document.getElementById('mpName').textContent=m.n;
+ document.getElementById('mpRole').textContent=m.r||'परिवार सदस्य';
+ document.getElementById('mpFather').textContent=m.father||'जानकारी उपलब्ध नहीं';
+ document.getElementById('mpCity').textContent=m.city||'जानकारी उपलब्ध नहीं';
+ document.getElementById('mpWork').textContent=m.work||'जानकारी उपलब्ध नहीं';
+ document.getElementById('mpPhone').textContent=m.phone||'जानकारी उपलब्ध नहीं';
+ show('memberProfile');
+}
+async function saveMember(){
+ const n=document.getElementById('newName').value.trim();
+ if(!n){alert('कृपया नाम भरें');return}
+ const member={
+  n:n,
+  r:document.getElementById('newRole').value.trim()||'परिवार सदस्य',
+  father:document.getElementById('newFather').value.trim(),
+  city:document.getElementById('newCity').value.trim(),
+  work:document.getElementById('newWork').value.trim(),
+  phone:document.getElementById('newPhone').value.trim()
+ };
+ try{
+   if(window.saveMemberToFirebase && window.firebaseReady){
+     await window.saveMemberToFirebase(member);
+     alert('✅ सदस्य Firebase में online सेव हो गया।');
+   } else {
+     members.push(member);
+     alert('Demo में सेव हुआ; Firebase connection उपलब्ध नहीं है।');
+   }
+ }catch(e){
+   console.error(e);
+   members.push(member);
+   alert('Firebase में सेव नहीं हुआ। Demo में रखा गया।\n\n'+(e.message||e));
+ }
+ ['newName','newRole','newFather','newCity','newWork','newPhone'].forEach(id=>document.getElementById(id).value='');
+ await loadOnlineMembers();
+ renderMembers(); show('family');
+}
+async function loadOnlineMembers(){
+ try{
+   if(window.loadMembersFromFirebase && window.firebaseReady){
+     const online = await window.loadMembersFromFirebase();
+     if(Array.isArray(online) && online.length){
+       members = online.map(m=>({
+         id:m.id,n:m.name||'परिवार सदस्य',r:m.relation||'परिवार सदस्य',
+         father:m.father||'',city:m.village||'',work:m.profession||'',phone:m.phone||''
+       }));
+       renderMembers();
+     }
+   }
+ }catch(e){ console.warn('Online members load failed', e); }
+}
+function addDemoMember(){members.push({n:"नया परिवार सदस्य",r:"नया सदस्य",father:"",city:"",work:"",phone:""});renderMembers();alert("Demo सदस्य जोड़ दिया गया।")}
+</script>
+</body></html>
